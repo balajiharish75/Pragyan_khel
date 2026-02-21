@@ -52,32 +52,47 @@ class ObjectTracker {
     }
     
     selectObject(detections, clickX, clickY, videoWidth, videoHeight) {
+        if (!detections || detections.length === 0) {
+            return null;
+        }
+        
+        let closestDetection = null;
+        let closestDistance = Infinity;
+        
         for (const detection of detections) {
             const [x, y, w, h] = detection.bbox;
             
-            const scaleX = videoWidth / (this.lastVideoWidth || videoWidth);
-            const scaleY = videoHeight / (this.lastVideoHeight || videoHeight);
+            const centerX = x + w / 2;
+            const centerY = y + h / 2;
             
-            const scaledX = x * scaleX;
-            const scaledY = y * scaleY;
-            const scaledW = w * scaleX;
-            const scaledH = h * scaleY;
+            const distance = Math.sqrt(
+                Math.pow(clickX - centerX, 2) + 
+                Math.pow(clickY - centerY, 2)
+            );
             
-            if (clickX >= scaledX && clickX <= scaledX + scaledW &&
-                clickY >= scaledY && clickY <= scaledY + scaledH) {
-                
-                this.trackedObject = {
-                    ...detection,
-                    bbox: [scaledX, scaledY, scaledW, scaledH],
-                    selectedAt: Date.now()
-                };
-                this.previousBbox = [scaledX, scaledY, scaledW, scaledH];
-                this.isTracking = true;
-                this.trackingLostFrames = 0;
-                this.trackingHistory = [];
-                
-                return this.trackedObject;
+            if (clickX >= x && clickX <= x + w &&
+                clickY >= y && clickY <= y + h) {
+                if (distance < closestDistance) {
+                    closestDistance = distance;
+                    closestDetection = detection;
+                }
             }
+        }
+        
+        if (closestDetection) {
+            const [x, y, w, h] = closestDetection.bbox;
+            
+            this.trackedObject = {
+                ...closestDetection,
+                bbox: [x, y, w, h],
+                selectedAt: Date.now()
+            };
+            this.previousBbox = [x, y, w, h];
+            this.isTracking = true;
+            this.trackingLostFrames = 0;
+            this.trackingHistory = [];
+            
+            return this.trackedObject;
         }
         
         return null;

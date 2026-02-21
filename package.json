@@ -1,5 +1,5 @@
 {
-  "name": "ai-smart-auto-focus",
+  "name": "dynamic-focus",
   "version": "1.0.0",
   "description": "AI-Based Smart Auto Focus & Dynamic Subject Tracking System",
   "main": "server.js",

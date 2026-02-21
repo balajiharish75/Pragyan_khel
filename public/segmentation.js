@@ -106,7 +106,7 @@ function applyBlurWithSegmentation(
 ) {
     const [x, y, w, h] = trackedBbox;
     
-    const padding = Math.max(w, h) * 0.15;
+    const padding = 0;
     const clipX = Math.max(0, x - padding);
     const clipY = Math.max(0, y - padding);
     const clipW = Math.min(videoWidth - clipX, w + padding * 2);

@@ -146,6 +146,7 @@ class SmartFocusApp {
         this.video.src = URL.createObjectURL(file);
         this.video.muted = true;
         this.video.playsInline = true;
+        this.video.loop = true;
         
         this.video.onloadedmetadata = () => {
             this.setupVideoCanvas();
@@ -195,8 +196,8 @@ class SmartFocusApp {
         this.objectTracker.setVideoDimensions(videoWidth, videoHeight);
         
         const container = document.getElementById('canvas-container');
-        const containerWidth = container.clientWidth - 4;
-        const containerHeight = window.innerHeight - 180;
+        const containerWidth = container.clientWidth;
+        const containerHeight = container.clientHeight;
         
         const scale = Math.min(
             containerWidth / videoWidth,
@@ -351,6 +352,16 @@ class SmartFocusApp {
                 label: trackedObject.class || 'Subject',
                 confidence: trackedObject.confidence
             });
+            
+            for (const detection of this.currentDetections) {
+                if (detection !== trackedObject) {
+                    drawBoundingBox(this.mainCtx, detection.bbox, {
+                        color: '#6366f1',
+                        label: detection.class,
+                        confidence: detection.confidence
+                    });
+                }
+            }
         } else {
             this.mainCtx.drawImage(this.video, 0, 0, videoWidth, videoHeight);
             

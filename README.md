@@ -1,4 +1,4 @@
-# AI Smart Auto Focus & Dynamic Subject Tracking System
+# Dynamic Focus - AI Smart Auto Focus & Dynamic Subject Tracking System
 
 A production-ready full-stack web application that implements real-time AI-based subject detection, tracking, and background blur using only browser-based processing.
 
